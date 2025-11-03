@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
-import type { CardType } from "../types/cardType";
+import type { CardType } from "../types/CardType";
 import Cardsdata from "./CardsData";
 
 import { useDispatch } from "react-redux";

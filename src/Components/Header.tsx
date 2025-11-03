@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store";
 import { NavLink } from "react-router-dom";
-import type { CardType } from "../types/cardType";
+import type { CardType } from "../types/CardType";
 import { ADD, REMOVE, DECREMENT } from "../redux/actions/action";
 
 import HomeIcon from "@mui/icons-material/Home";
@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Cart from "../assets/images/cart.png";
 
 const Header: React.FC = () => {
-	const getData = useSelector((state: RootState) => state.cartreducer.carts);
+	const cartItems = useSelector((state: RootState) => state.cartreducer.carts);
 	const dispatch = useDispatch();
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -38,6 +38,12 @@ const Header: React.FC = () => {
 	const removeItem = (item: CardType) => {
 		dispatch(REMOVE(item));
 	};
+
+	// Calculate total price for all items in cart
+	const totalCartPrice = cartItems.reduce(
+		(acc: number, item: CardType) => acc + (item.price || 0) * (item.qnty || 1),
+		0
+	);
 
 	return (
 		<header className="bg-white dark:bg-[#450693] shadow-sm">
@@ -70,7 +76,7 @@ const Header: React.FC = () => {
 							onClick={handleClick}
 						>
 							<Badge
-								badgeContent={getData.length}
+								badgeContent={cartItems.length}
 								color="secondary"
 								sx={{
 									"& .MuiBadge-badge": {
@@ -112,16 +118,16 @@ const Header: React.FC = () => {
 								},
 							}}
 						>
-							{getData.length ? (
+							{cartItems.length ? (
 								<div className="flex flex-col gap-4 p-4 max-h-[400px] overflow-y-auto">
-									{getData.map((item: CardType, index: number) => (
+									{cartItems.map((item: CardType, index: number) => (
 										<div
 											key={index}
 											className="flex items-center justify-between bg-[#2a2a2a] p-3 rounded-md"
 										>
 											{/* Item Info */}
 											<NavLink
-												to={`/cart/${item.id}`} // <-- Use item.id instead of index
+												to={`/cart/${item.id}`}
 												className="flex items-center gap-3"
 												onClick={handleClose}
 											>
@@ -137,8 +143,9 @@ const Header: React.FC = () => {
 													<span className="text-gray-300 text-sm">
 														{item.address}
 													</span>
+													{/* Total price per item */}
 													<span className="text-amber-400 font-bold">
-														Rs. {item.price}
+														Rs. {(item.price || 0) * (item.qnty || 1)}
 													</span>
 												</div>
 											</NavLink>
@@ -169,27 +176,29 @@ const Header: React.FC = () => {
 											</div>
 										</div>
 									))}
+
+									{/* Total Price of All Items */}
+									<div className="flex justify-end mt-4 text-white font-bold text-lg">
+										Total: Rs. {totalCartPrice}
+									</div>
 								</div>
 							) : (
-								<div className="flex flex-row items-center justify-center p-6">
-									<div className="relative p-6 flex flex-col items-center justify-center w-full h-full">
-										{/* Close icon at top-right */}
-										<CloseIcon
-											sx={{
-												fontSize: 28,
-												color: "#f43f5e",
-												cursor: "pointer",
-												position: "absolute",
-												top: 8,
-												right: 8,
-											}}
-											onClick={handleClose}
-										/>
+								<div className="flex flex-col items-center justify-center p-6 relative w-full h-full">
+									{/* Close icon at top-right */}
+									<CloseIcon
+										sx={{
+											fontSize: 28,
+											color: "#f43f5e",
+											cursor: "pointer",
+											position: "absolute",
+											top: 8,
+											right: 8,
+										}}
+										onClick={handleClose}
+									/>
 
-										{/* Empty Cart Content */}
-										<p className="text-[#F5DAA7] mb-3">Your Cart is Empty.</p>
-										<img src={Cart} alt="cart" style={{ width: "5rem" }} />
-									</div>
+									<p className="text-[#F5DAA7] mb-3">Your Cart is Empty.</p>
+									<img src={Cart} alt="cart" style={{ width: "5rem" }} />
 								</div>
 							)}
 						</Menu>

@@ -1,4 +1,4 @@
-import type { CardType } from "../../types/cardType";
+import type { CardType } from "../../types/CardType";
 
 interface CartState {
 	carts: CardType[];
