@@ -1,40 +1,41 @@
-# 🛒 Add to Cart Project
+# Add to Cart Application
 
-The **Add to Cart Project** is a simple and visually appealing React application built to demonstrate dynamic rendering of product cards and interactive functionality like adding items to a cart. It serves as a beginner-friendly example of using React state management, Material UI components, and Tailwind CSS styling together.
+A **React + Redux** shopping cart application with TypeScript, MUI, and TailwindCSS. Users can add items to the cart, adjust quantity, remove items, and see real-time price updates. The cart also supports navigation to item details.
 
----
+## Features
 
-## 🚀 Features
+- **Add to Cart**: Add items to the cart from the shop page.  
+- **Quantity Management**: Increment or decrement quantity for each item.  
+- **Remove Items**: Remove items individually from the cart or the details page.  
+- **Real-Time Price Update**: Price updates according to quantity changes.  
+- **Empty Cart Feedback**: Displays “Your Cart is Empty” when there are no items.  
+- **Item Details Page**: View detailed information about an item, adjust quantity, or remove it.  
+- **Responsive Design**: Fully responsive layout using TailwindCSS.  
+- **TypeScript Support**: Strong typing for safer code.  
+- **Redux for State Management**: Centralized cart state with actions: `ADD`, `DECREMENT`, `REMOVE`.  
 
-- Displays a list of food items with name, origin, and price  
-- Hover effects and smooth animations on cards  
-- “Add to Cart” button for each product  
-- Responsive layout using Flexbox and Tailwind CSS  
-- Clean and modern UI design  
+## Tech Stack
 
----
+- **Frontend**: React, TypeScript  
+- **State Management**: Redux (Redux Toolkit)  
+- **Styling**: TailwindCSS, Material-UI (MUI) Icons & Components  
+- **Routing**: React Router DOM  
+- **Version Control**: Git  
 
-## 🧠 Technology Stack
+## Redux Actions
 
-| Category | Tools / Frameworks |
-|-----------|-------------------|
-| **Frontend** | React + TypeScript |
-| **Styling** | Tailwind CSS + Material UI |
-| **Routing** | React Router DOM |
-| **State Management** | React Hooks (useState) |
-| **Icons / UI Components** | Material UI Components |
+- ADD(item) → Adds an item or increases quantity.
+- DECREMENT(item) → Decreases item quantity. If quantity is 1, removes the item.
+- REMOVE(item) → Removes an item completely from the cart.
 
+## Installation
 
----
-
-## ⚙️ How to Run the Project
-
-Follow these steps to set up and run this project locally 👇  
-
+Clone the repository:
 ```bash
-git clone https://github.com/affanali-781/Add-To-Cart.git
-cd add-to-cart-project
+git clone https://github.com/yourusername/add-to-cart.git
+cd add-to-cart
 npm install
 npm run dev
+
 
 
