@@ -1,5 +1,9 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../store";
 import { NavLink } from "react-router-dom";
+import type { CardType } from "../types/cardType";
+import { ADD, REMOVE, DECREMENT } from "../redux/actions/action";
 
 import HomeIcon from "@mui/icons-material/Home";
 import Badge from "@mui/material/Badge";
@@ -10,8 +14,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import Cart from "../assets/images/cart.png";
 
 const Header: React.FC = () => {
+	const getData = useSelector((state: RootState) => state.cartreducer.carts);
+	const dispatch = useDispatch();
+
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
+
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -19,10 +27,23 @@ const Header: React.FC = () => {
 		setAnchorEl(null);
 	};
 
+	const increment = (item: CardType) => {
+		dispatch(ADD(item));
+	};
+
+	const decrement = (item: CardType) => {
+		dispatch(DECREMENT(item));
+	};
+
+	const removeItem = (item: CardType) => {
+		dispatch(REMOVE(item));
+	};
+
 	return (
 		<header className="bg-white dark:bg-[#450693] shadow-sm">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<div className="flex h-20 items-center justify-between relative">
+					{/* Home Icon */}
 					<div className="flex items-center">
 						<NavLink
 							to="/"
@@ -32,27 +53,25 @@ const Header: React.FC = () => {
 						</NavLink>
 					</div>
 
-					{/* Center Section (Text) */}
+					{/* Title */}
 					<div className="absolute left-1/2 transform -translate-x-1/2">
 						<p className="text-2xl font-semibold dark:text-[#FFC400]">
 							Add to Cart
 						</p>
 					</div>
 
-					{/* Right Section (Cart Icon with Badge) */}
+					{/* Cart Icon */}
 					<div className="flex items-center">
-						<NavLink
-							to="/"
-							className="relative flex items-center justify-center rounded-md px-3 py-2 text-base font-medium text-[#F5DAA7] shadow-sm dark:hover:bg-[#8C00FF]"
+						<button
+							id="basic-button"
+							aria-controls={open ? "basic-menu" : undefined}
+							aria-haspopup="true"
+							aria-expanded={open ? "true" : undefined}
+							onClick={handleClick}
 						>
 							<Badge
-								badgeContent={1}
+								badgeContent={getData.length}
 								color="secondary"
-								id="basic-button"
-								aria-controls={open ? "basic-menu" : undefined}
-								aria-haspopup="true"
-								aria-expanded={open ? "true" : undefined}
-								onClick={handleClick}
 								sx={{
 									"& .MuiBadge-badge": {
 										backgroundColor: "#a78413ff",
@@ -63,9 +82,9 @@ const Header: React.FC = () => {
 									},
 								}}
 							>
-								<ShoppingCartIcon sx={{ fontSize: 40 }} />
+								<ShoppingCartIcon sx={{ fontSize: 40, color: "#F5DAA7" }} />
 							</Badge>
-						</NavLink>
+						</button>
 
 						<Menu
 							id="basic-menu"
@@ -80,8 +99,8 @@ const Header: React.FC = () => {
 										color: "#f1f5f9",
 										paddingY: 1,
 										borderRadius: 2,
-										boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-										minWidth: "180px",
+										boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+										minWidth: "400px",
 									},
 								},
 							}}
@@ -93,27 +112,86 @@ const Header: React.FC = () => {
 								},
 							}}
 						>
-							<div
-								className="flex items-center justify-center"
-								style={{ width: "24rem", padding: 10, position: "relative" }}
-							>
-								<p className="text-[#F5DAA7]"> Your Cart is Empty.</p>
-								<img
-									src={Cart}
-									alt="cart"
-									style={{ width: "5rem", padding: 10 }}
-								/>
-								<CloseIcon
-									sx={{ fontSize: 28, color: "#f43f5e" }}
-									onClick={handleClose}
-									style={{
-										position: "absolute",
-										top: 2,
-										right: "20",
-										cursor: "pointer",
-									}}
-								/>
-							</div>
+							{getData.length ? (
+								<div className="flex flex-col gap-4 p-4 max-h-[400px] overflow-y-auto">
+									{getData.map((item: CardType, index: number) => (
+										<div
+											key={index}
+											className="flex items-center justify-between bg-[#2a2a2a] p-3 rounded-md"
+										>
+											{/* Item Info */}
+											<NavLink
+												to={`/cart/${item.id}`} // <-- Use item.id instead of index
+												className="flex items-center gap-3"
+												onClick={handleClose}
+											>
+												<img
+													src={item.imgdata}
+													alt={item.rname}
+													className="w-16 h-16 rounded"
+												/>
+												<div className="flex flex-col">
+													<span className="text-white font-semibold">
+														{item.rname}
+													</span>
+													<span className="text-gray-300 text-sm">
+														{item.address}
+													</span>
+													<span className="text-amber-400 font-bold">
+														Rs. {item.price}
+													</span>
+												</div>
+											</NavLink>
+
+											{/* Counter & Remove */}
+											<div className="flex items-center gap-2">
+												<button
+													onClick={() => decrement(item)}
+													className="bg-gray-700 text-white px-2 py-1 rounded hover:bg-gray-600"
+												>
+													-
+												</button>
+												<span className="text-white font-semibold">
+													{item.qnty || 1}
+												</span>
+												<button
+													onClick={() => increment(item)}
+													className="bg-gray-700 text-white px-2 py-1 rounded hover:bg-gray-600"
+												>
+													+
+												</button>
+												<button
+													onClick={() => removeItem(item)}
+													className="text-red-500 font-bold hover:text-red-700 ml-2"
+												>
+													X
+												</button>
+											</div>
+										</div>
+									))}
+								</div>
+							) : (
+								<div className="flex flex-row items-center justify-center p-6">
+									<div className="relative p-6 flex flex-col items-center justify-center w-full h-full">
+										{/* Close icon at top-right */}
+										<CloseIcon
+											sx={{
+												fontSize: 28,
+												color: "#f43f5e",
+												cursor: "pointer",
+												position: "absolute",
+												top: 8,
+												right: 8,
+											}}
+											onClick={handleClose}
+										/>
+
+										{/* Empty Cart Content */}
+										<p className="text-[#F5DAA7] mb-3">Your Cart is Empty.</p>
+										<img src={Cart} alt="cart" style={{ width: "5rem" }} />
+									</div>
+								</div>
+							)}
 						</Menu>
 					</div>
 				</div>

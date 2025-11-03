@@ -3,11 +3,21 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+
+import type { CardType } from "../types/cardType";
 import Cardsdata from "./CardsData";
+
+import { useDispatch } from "react-redux";
+import { ADD } from "../redux/actions/action";
 
 const Cards: React.FC = () => {
 	const [data, setData] = useState(Cardsdata);
 
+	const dispatch = useDispatch();
+
+	const send = (e: CardType) => {
+		dispatch(ADD(e));
+	};
 	return (
 		<>
 			<div className="mt-11 px-6">
@@ -77,7 +87,7 @@ const Cards: React.FC = () => {
 
 									<button
 										className="w-full bg-amber-500 text-white py-2 rounded-md font-semibold hover:bg-amber-600 active:scale-95 transition-transform duration-200"
-										onClick={() => alert(`${d.rname} added to cart!`)}
+										onClick={() => send(d)}
 									>
 										Add to Cart
 									</button>
