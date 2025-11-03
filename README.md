@@ -32,7 +32,7 @@ A **React + Redux** shopping cart application with TypeScript, MUI, and Tailwind
 
 Clone the repository:
 ```bash
-git clone https://github.com/yourusername/add-to-cart.git
+git clone https://github.com/affanali-781/Add-To-Cart.git
 cd add-to-cart
 npm install
 npm run dev
