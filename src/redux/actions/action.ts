@@ -1,4 +1,4 @@
-import type { CardType } from "../../types/cardType";
+import type { CardType } from "../../types/CardType";
 
 export const ADD = (item: CardType) => {
 	return {
